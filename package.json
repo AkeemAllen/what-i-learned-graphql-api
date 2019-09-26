@@ -1,0 +1,13 @@
+{
+  "name": "what-i-learned-graphql-api",
+  "version": "1.0.0",
+  "description": "Graphql Api for what-i-learned website",
+  "main": "server.js",
+  "author": "Akeem Allen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^14.5.8"
+  }
+}
