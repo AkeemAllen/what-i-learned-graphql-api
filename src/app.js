@@ -2,37 +2,32 @@ const express = require("express");
 const mongoose = require("mongoose");
 const http = require("http");
 const express_graphql = require("express-graphql");
+const cors = require("cors");
 const { buildSchema } = require("graphql");
+const schema = require("./schema/schema");
+require("dotenv/config");
 
 const app = express();
 const server = http.createServer(app);
 
-mongoose.connect(
-  "mongodb+srv://Akeem:akstar4321@testcluster1-pbgw6.mongodb.net/test?retryWrites=true&w=majority"
-);
+// allows cross-origin requests
+app.use(cors());
 
-mongoose.Promise = Promise;
-
-var schema = buildSchema(`
-  type Query {
-    message: String
-  }
-`);
-
-var root = {
-  message: () => "Hello"
-};
-
-app.get("/", (req, res) => {
-  res.send("Hello");
+// connect to mongo database
+mongoose.connect(process.env.MONGO_DB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+mongoose.connection.once("open", () => {
+  console.log("conneted to database");
 });
 
 app.use(
   "/graphql",
   express_graphql({
     schema: schema,
-    rootValue: root,
-    graphiql: true
+    graphiql: true,
+    pretty: true
   })
 );
 
