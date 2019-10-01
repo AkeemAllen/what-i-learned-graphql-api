@@ -78,7 +78,7 @@ const Mutation = new GraphQLObjectType({
             return { ...result._doc, password: null, _id: result._id };
           })
           .catch(err => {
-            throw err;
+            return err;
           });
       }
     }
