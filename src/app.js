@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const http = require("http");
 const graphqlHttp = require("express-graphql");
 const cors = require("cors");
-const firstSchema = require("./schema/schema");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const graphqlSchema = require("./graphql/schema");
