@@ -8,10 +8,9 @@ module.exports = {
       password: userInput.password
     });
 
-    const savedUser = await user.save();
-    return { ...savedUser };
+    return await user.save();
   },
-  allUsers: async ({ email }, req) => {
+  allUsers: async req => {
     return await User.find();
   }
 };

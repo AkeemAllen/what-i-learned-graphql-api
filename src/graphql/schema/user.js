@@ -8,15 +8,15 @@ exports.User = `
 `;
 
 exports.UserInputData = `
-    input UserInputData [
+    input UserInputData {
         email: String!
         name: String!
         password: String!
-    ]
+    }
 `;
 
 exports.UserQueries = `
-    allUsers(email:String!): [User!]!
+    allUsers: [User!]!
 `;
 
 exports.UserMutations = `

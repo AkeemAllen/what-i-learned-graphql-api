@@ -1,10 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const http = require("http");
-const express_graphql = require("express-graphql");
+const graphqlHttp = require("express-graphql");
 const cors = require("cors");
-const { buildSchema } = require("graphql");
-const schema = require("./schema/schema");
+const firstSchema = require("./schema/schema");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const graphqlSchema = require("./graphql/schema");
@@ -44,12 +43,12 @@ mongoose.connection.once("open", () => {
 
 app.use(
   "/graphql",
-  express_graphql({
-    schema: schema,
-    // rootValue: graphqlResolver,
+  graphqlHttp({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
     graphiql: true,
     pretty: true,
-    formatError(err) {
+    customformatError(err) {
       if (!err.originalError) {
         return err;
       }
