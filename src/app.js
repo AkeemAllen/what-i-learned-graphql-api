@@ -1,63 +1,28 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const http = require("http");
-const graphqlHttp = require("express-graphql");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const graphqlSchema = require("./graphql/schema");
-const graphqlResolver = require("./graphql/resolvers");
+const middleware = require("./middleware/index");
 require("dotenv/config");
 
 const app = express();
 const server = http.createServer(app);
 
 // allows cross-origin requests
-app.use(cors());
+middleware.useCors(app);
 
-app.use(bodyParser.json());
+// For json parsing
+middleware.useBodyParser(app);
 
 // for logging purposes
-app.use(morgan("dev"));
+middleware.useMorgan(app);
 
 // setting headers
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
+middleware.setHeaders(app);
 
 // connect to mongo database
-mongoose.connect(process.env.MONGO_DB, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-mongoose.connection.once("open", () => {
-  console.log("conneted to database");
-});
+middleware.mongoConnection();
 
-app.use(
-  "/graphql",
-  graphqlHttp({
-    schema: graphqlSchema,
-    rootValue: graphqlResolver,
-    graphiql: true,
-    pretty: true,
-    customformatError(err) {
-      if (!err.originalError) {
-        return err;
-      }
-      const data = err.originalError.data;
-      const message = err.message || "An error occured";
-      const code = err.originalError.code || 500;
-      return { message: message, status: code, data: data };
-    }
-  })
-);
+// Graphql Setup
+middleware.setUpGraphql(app);
 
 setImmediate(() => {
   server.listen(8081, () => {
