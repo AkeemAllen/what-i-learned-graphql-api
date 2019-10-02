@@ -7,6 +7,8 @@ const { buildSchema } = require("graphql");
 const schema = require("./schema/schema");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+const graphqlSchema = require("./graphql/schema");
+const graphqlResolver = require("./graphql/resolvers");
 require("dotenv/config");
 
 const app = express();
@@ -44,8 +46,18 @@ app.use(
   "/graphql",
   express_graphql({
     schema: schema,
+    // rootValue: graphqlResolver,
     graphiql: true,
-    pretty: true
+    pretty: true,
+    formatError(err) {
+      if (!err.originalError) {
+        return err;
+      }
+      const data = err.originalError.data;
+      const message = err.message || "An error occured";
+      const code = err.originalError.code || 500;
+      return { message: message, status: code, data: data };
+    }
   })
 );
 
@@ -54,5 +66,3 @@ setImmediate(() => {
     console.log("Listening on port 8081");
   });
 });
-
-// export default app;
