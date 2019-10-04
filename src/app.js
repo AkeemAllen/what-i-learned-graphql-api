@@ -4,7 +4,6 @@ const middleware = require("./middleware/index");
 require("dotenv/config");
 
 const app = express();
-const server = http.createServer(app);
 
 // allows cross-origin requests
 middleware.useCors(app);
@@ -23,6 +22,8 @@ middleware.mongoConnection();
 
 // Graphql Setup
 middleware.setUpGraphql(app);
+
+const server = http.createServer(app);
 
 setImmediate(() => {
   server.listen(8081, () => {
