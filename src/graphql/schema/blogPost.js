@@ -1,5 +1,3 @@
-const userSchema = require("../schema/user");
-
 exports.BlogPost = `
     type BlogPost {
         id:ID!
@@ -8,11 +6,8 @@ exports.BlogPost = `
         description:String!
         publishedDate: String!
         body:String!
-        creator: User!
     }
 `;
-
-userSchema.User;
 
 exports.BlogPostInputData = `
     input BlogPostInputData {

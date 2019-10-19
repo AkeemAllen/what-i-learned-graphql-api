@@ -23,10 +23,6 @@ const blogPostSchema = new Schema({
     type: String,
     required: true
   },
-  creator: {
-    type: Schema.Types.ObjectId,
-    ref: "User"
-  },
   comments: [
     {
       type: Schema.Types.ObjectId,
