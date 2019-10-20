@@ -39,7 +39,7 @@ jobs:
       - persist_to_workspace:
           root: ~/project
           paths:
-            - /*
+            - /
 
   deploy_master:
     name: Deploy to Linode
