@@ -36,7 +36,7 @@ jobs:
       # - run: |
       #     mkdir public
       #     echo "test" > public/test.txt
-      - run: ls -a
+      - run: yarn install
       - persist_to_workspace:
           root: ~/project
           paths:
