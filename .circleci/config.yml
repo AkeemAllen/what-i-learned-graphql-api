@@ -4,10 +4,95 @@
 #
 version: 2
 jobs:
+  test:
+    docker:
+      - image: circleci/node:10.16
+    steps:
+      - run:
+          name: Running Tests
+          command: echo "Tested"
+
   build:
+    # specify working directory
+    working_directory: ~/project
     docker:
       # specify the version you desire here
       - image: circleci/node:10.16
-
     steps:
-      - run: yarn install
+      # cloning git repo
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      # - run: |
+      #     mkdir public
+      #     echo "test" > public/test.txt
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - /*
+
+  deploy_master:
+    name: Deploy to Linode
+    docker:
+      - image: circleci/node:10.16
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - add_ssh_keys:
+          fingerprints:
+            - 6d:93:af:14:f2:55:e0:32:4e:9e:9e:4a:32:bc:16:ee
+      - run:
+          name: Change Privileges
+          command: |
+            chmod 755 .circleci/scripts/deploy.sh 
+            chmod 755 .circleci/scripts/cpyToServer.sh
+      - run:
+          name: Copy files to Server
+          command: .circleci/scripts/deploy.sh master
+
+  # deploy_develop:
+  #   name: Deploy to Linode
+  #   docker:
+  #     - image: circleci/node:10.16
+  #   steps:
+  #     - checkout
+  #     - attach_workspace:
+  #         at: ~/project/
+  #     - add_ssh_keys:
+  #         fingerprints:
+  #           - 6d:93:af:14:f2:55:e0:32:4e:9e:9e:4a:32:bc:16:ee
+  #     - run:
+  #         name: Change Privileges
+  #         command: |
+  #           chmod 755 .circleci/scripts/deploy.sh
+  #           chmod 755 .circleci/scripts/cpyToServer.sh
+  #           chmod 755 .circleci/scripts/cpyToDevelopServer.sh
+  #     - run:
+  #         name: Copy files to Server
+  #         command: .circleci/scripts/deploy.sh develop
+
+workflows:
+  version: 2
+  test_build_deploy:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+      - deploy_master:
+          requires:
+            - build
+          filters:
+            branches:
+              only: feature/ci-cd
