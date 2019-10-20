@@ -50,6 +50,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project/
+      - run: ls -a
       - add_ssh_keys:
           fingerprints:
             - 6d:93:af:14:f2:55:e0:32:4e:9e:9e:4a:32:bc:16:ee
