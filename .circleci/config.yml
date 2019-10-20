@@ -14,7 +14,7 @@ jobs:
 
   build:
     # specify working directory
-    working_directory: ~/project
+    working_directory: ~/project/what-i-learned-graphql-api/
     docker:
       # specify the version you desire here
       - image: circleci/node:10.16
@@ -40,7 +40,7 @@ jobs:
       - persist_to_workspace:
           root: ~/project
           paths:
-            - null
+            - what-i-learned-graphql-api/
 
   deploy_master:
     name: Deploy to Linode
