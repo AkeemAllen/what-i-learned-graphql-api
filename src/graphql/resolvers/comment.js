@@ -1,4 +1,5 @@
 const Comment = require("../../models/Comment");
+const User = require("../../models/User");
 
 module.exports = {
   addComment: async ({ input }) => {
@@ -11,6 +12,9 @@ module.exports = {
     return await comment.save();
   },
   getCommentByPost: async ({ postSlug }, req) => {
-    return await Comment.find({ postSlug: postSlug });
+    return await Comment.find({ postSlug: postSlug }).populate("writer");
+  },
+  allComments: async () => {
+    return await Comment.find().populate("writer");
   }
 };

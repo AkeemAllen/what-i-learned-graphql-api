@@ -1,10 +1,15 @@
+const userSchema = require("../schema/user");
+
 exports.Comment = `
     type Comment{
         id: ID!
         body: String!
         postSlug: String!
+        writer: User!
     }
 `;
+
+userSchema.User;
 
 exports.CommentInputData = `
     input CommentInputData {
@@ -13,6 +18,7 @@ exports.CommentInputData = `
     }
 `;
 exports.CommentQueries = `
+    allComments:[Comment!]!
     getCommentByPost(postSlug:String!):[Comment!]!
 `;
 

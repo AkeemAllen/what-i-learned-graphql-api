@@ -10,6 +10,11 @@ const commentSchema = new Schema({
     type: String,
     required: true
   },
+  createdDate: {
+    type: Date,
+    required: true,
+    default: Date.now()
+  },
   writer: {
     type: Schema.Types.ObjectId,
     ref: "User"
