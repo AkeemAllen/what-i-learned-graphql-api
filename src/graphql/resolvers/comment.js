@@ -1,20 +1,35 @@
 const Comment = require("../../models/Comment");
-const User = require("../../models/User");
+const { dateToString } = require("../helpers/date");
 
 module.exports = {
   addComment: async ({ input }) => {
     const comment = new Comment({
       body: input.body,
       postSlug: input.postSlug,
-      writer: "5d9624e042daba4518812390"
+      writer: input.writer,
+      date: dateToString(input.date)
     });
     let createdComment;
     return await comment.save();
   },
   getCommentByPost: async ({ postSlug }, req) => {
-    return await Comment.find({ postSlug: postSlug }).populate("writer");
+    const results = await Comment.find({ postSlug: postSlug });
+    return results.map(comment => {
+      return {
+        ...comment._doc,
+        id: comment.id,
+        date: dateToString(comment._doc.date)
+      };
+    });
   },
   allComments: async () => {
-    return await Comment.find().populate("writer");
+    const results = await Comment.find();
+    return results.map(comment => {
+      return {
+        ...comment._doc,
+        id: comment.id,
+        date: dateToString(comment._doc.date)
+      };
+    });
   }
 };

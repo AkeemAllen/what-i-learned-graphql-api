@@ -1,20 +1,19 @@
-const userSchema = require("../schema/user");
-
 exports.Comment = `
     type Comment{
         id: ID!
         body: String!
         postSlug: String!
-        writer: User!
+        writer: String!
+        date: String!
     }
 `;
-
-userSchema.User;
 
 exports.CommentInputData = `
     input CommentInputData {
         body: String!
         postSlug: String!
+        writer: String
+        date: String!
     }
 `;
 exports.CommentQueries = `

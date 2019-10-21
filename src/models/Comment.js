@@ -10,14 +10,14 @@ const commentSchema = new Schema({
     type: String,
     required: true
   },
-  createdDate: {
+  date: {
     type: Date,
-    required: true,
-    default: Date.now()
+    required: true
   },
   writer: {
-    type: Schema.Types.ObjectId,
-    ref: "User"
+    type: String,
+    required: false,
+    default: "Anonymous"
   }
 });
 
