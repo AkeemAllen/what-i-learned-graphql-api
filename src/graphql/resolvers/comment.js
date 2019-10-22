@@ -7,13 +7,19 @@ module.exports = {
       body: input.body,
       postSlug: input.postSlug,
       writer: input.writer,
-      date: dateToString(input.date)
+      date: input.date
     });
-    let createdComment;
-    return await comment.save();
+    const result = await comment.save();
+    return {
+      ...result._doc,
+      id: result.id,
+      date: dateToString(result.date)
+    };
   },
-  getCommentByPost: async ({ postSlug }, req) => {
-    const results = await Comment.find({ postSlug: postSlug });
+  getCommentByPost: async ({ postSlug }, { sort }, req) => {
+    const results = await Comment.find({ postSlug: postSlug }).sort({
+      date: "desc"
+    });
     return results.map(comment => {
       return {
         ...comment._doc,
@@ -22,8 +28,11 @@ module.exports = {
       };
     });
   },
-  allComments: async () => {
-    const results = await Comment.find();
+  allComments: async ({ sort }) => {
+    const results = await Comment.find().sort({
+      date: "desc"
+    });
+    // return results;
     return results.map(comment => {
       return {
         ...comment._doc,

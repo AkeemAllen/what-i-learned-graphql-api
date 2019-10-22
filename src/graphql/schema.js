@@ -4,6 +4,7 @@ const userSchemas = require("./schema/user");
 const blogPostSchemas = require("./schema/blogPost");
 const contentfulBlogPostSchema = require("./schema/contentfulBlogPost");
 const commentSchema = require("./schema/comment");
+const { Sorting } = require("./helpers/sorting");
 
 module.exports = buildSchema(`
     ${userSchemas.User}
@@ -18,6 +19,7 @@ module.exports = buildSchema(`
 
     ${commentSchema.Comment}
     ${commentSchema.CommentInputData}
+    ${Sorting}
     
     type RootQuery {
         ${userSchemas.UserQueries}

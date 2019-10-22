@@ -13,12 +13,13 @@ exports.CommentInputData = `
         body: String!
         postSlug: String!
         writer: String
-        date: String!
+        date: String
     }
 `;
+
 exports.CommentQueries = `
-    allComments:[Comment!]!
-    getCommentByPost(postSlug:String!):[Comment!]!
+    allComments(sort: Sorting):[Comment!]!
+    getCommentByPost(postSlug:String!,sort:Sorting):[Comment!]!
 `;
 
 exports.CommentMutations = `
